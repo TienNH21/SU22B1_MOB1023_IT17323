@@ -1,6 +1,7 @@
 package buoi4_swing;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class DemoFrame extends javax.swing.JFrame {
     public DemoFrame() {
@@ -32,7 +33,8 @@ public class DemoFrame extends javax.swing.JFrame {
         cbbCNganh = new javax.swing.JComboBox<>();
         ckbLapTrinh = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblSV = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,18 +152,35 @@ public class DemoFrame extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(0, 204, 0));
 
-        jPanel3.setBackground(new java.awt.Color(102, 255, 255));
+        tblSV.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 227, Short.MAX_VALUE)
-        );
+            },
+            new String [] {
+                "Mã SV", "Họ tên", "Giới tính", "Email", "C/Ngành", "Gamer"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblSV.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSVMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblSV);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -169,14 +188,14 @@ public class DemoFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -199,8 +218,8 @@ public class DemoFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -236,14 +255,40 @@ public class DemoFrame extends javax.swing.JFrame {
         boolean lapTrinh = this.ckbLapTrinh.isSelected();
         
         JOptionPane.showMessageDialog(this, hoTen);
-        System.out.println(hoTen);
-        System.out.println(maSv);
-        System.out.println(email);
-        System.out.println(pwd);
-        System.out.println(gt);
-        System.out.println(viTri + "-" + cNganh);
-        System.out.println(lapTrinh);
+        DefaultTableModel dtm =
+            (DefaultTableModel) this.tblSV.getModel();
+        
+        // Xóa toàn bộ các dòng dữ liệu cũ
+        dtm.setRowCount(0);
+        
+        Object[] rowData = {
+            maSv,
+            hoTen,
+            gt,
+            email,
+            cNganh,
+            lapTrinh
+        };
+        
+        dtm.addRow(rowData);
     }//GEN-LAST:event_btnDocActionPerformed
+
+    private void tblSVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSVMouseClicked
+        int row = this.tblSV.getSelectedRow();
+        
+        if (row == -1) {
+            return ;
+        }
+        
+        String maSV = this.tblSV.getValueAt(row, 0).toString();
+        String hoTen = this.tblSV.getValueAt(row, 1).toString();
+        String gt = this.tblSV.getValueAt(row, 2).toString();
+        String email = this.tblSV.getValueAt(row, 3).toString();
+        String cNganh = this.tblSV.getValueAt(row, 4).toString();
+//        String maSV = this.tblSV.getValueAt(row, 5).toString();
+
+
+    }//GEN-LAST:event_tblSVMouseClicked
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -291,9 +336,10 @@ public class DemoFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton rdoNam;
     private javax.swing.JRadioButton rdoNu;
+    private javax.swing.JTable tblSV;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtHoTen;
     private javax.swing.JTextField txtMaSv;
