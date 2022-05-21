@@ -93,8 +93,18 @@ public class QLSVFrame extends javax.swing.JFrame {
         rdoNu.setText("Nữ");
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnSua.setText("Sửa");
+        btnSua.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaActionPerformed(evt);
+            }
+        });
 
         btnXoa.setText("Xóa");
         btnXoa.addActionListener(new java.awt.event.ActionListener() {
@@ -280,8 +290,40 @@ public class QLSVFrame extends javax.swing.JFrame {
         this.clearForm();
     }//GEN-LAST:event_btnXoaFormActionPerformed
 
+    private SinhVien getFormData()
+    {
+        String hoTen = this.txtHoTen.getText();
+        String maSV = this.txtMaSV.getText();
+        String diaChi = this.txtDiaChi.getText();
+        
+        String cNganh = this.cbbCNganh.getSelectedItem().toString();
+        int gt = this.rdoNam.isSelected() ? 1 : 0;
+        
+        if (
+            hoTen.trim().length() == 0 ||
+            maSV.trim().length() == 0 ||
+            diaChi.trim().length() == 0
+        ) {
+            JOptionPane.showMessageDialog(this, "Không được để trống");
+            return null;
+        }
+        
+        SinhVien sv = new SinhVien(maSV, cNganh, hoTen, gt, diaChi);
+        
+        return sv;
+    }
+    
     private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
-        // TODO: Confirm trước khi xóa
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có muốn xóa bản ghi này?");
+
+        if (confirm == JOptionPane.NO_OPTION) {
+            return ;
+        } else if (confirm == JOptionPane.CANCEL_OPTION) {
+            return ;
+        } else {
+            // Người dùng chọn YES nên cho phép xóa
+        }
+        
         int row = this.tblSV.getSelectedRow();
         if (row == -1) {
             JOptionPane.showMessageDialog(this, "Chọn 1 dòng trên table");
@@ -290,6 +332,7 @@ public class QLSVFrame extends javax.swing.JFrame {
         
         this.qlds.delete(row);
         this.loadTable();
+        this.clearForm();
     }//GEN-LAST:event_btnXoaActionPerformed
 
     private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
@@ -321,6 +364,36 @@ public class QLSVFrame extends javax.swing.JFrame {
             this.rdoNu.setSelected(true);
         }
     }//GEN-LAST:event_tblSVMouseClicked
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        SinhVien sv = this.getFormData();
+        if (sv == null) {
+            return ;
+        }
+        
+        this.qlds.insert(sv);
+        this.loadTable();
+        this.clearForm();
+        JOptionPane.showMessageDialog(this, "Thêm mới thành công");
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnSuaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaActionPerformed
+        int row = this.tblSV.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Chọn dòng cần sửa trên Table");
+            return ;
+        }
+        
+        SinhVien sv = this.getFormData();
+        if (sv == null) {
+            return ;
+        }
+        
+        this.qlds.update(row, sv);
+        this.loadTable();
+        this.clearForm();
+        JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+    }//GEN-LAST:event_btnSuaActionPerformed
 
     private void clearForm()
     {
