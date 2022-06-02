@@ -5,11 +5,13 @@
  */
 package buoi2_lt1;
 
+import java.io.Serializable;
+
 /**
  *
  * @author tiennh
  */
-public class SinhVien extends Nguoi {
+public class SinhVien extends Nguoi implements Serializable {
     private String maSv;
     private String chuyenNganh;
 
